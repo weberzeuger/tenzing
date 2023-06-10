@@ -1,0 +1,14 @@
+{
+	"name": "manhattan-review/tenzing",
+	"description": "Tenzing LMS",
+	"require": {
+		"vlucas/phpdotenv": "*",
+		"symfony/http-foundation": "*",
+		"doctrine/dbal": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"ManhattanReview\\Tenzing\\": "Classes"
+		}
+	}
+}
