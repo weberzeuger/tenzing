@@ -1,0 +1,35 @@
+# Apache .htaccess
+
+# Content-Security-Policy (CSP) HTTP headers
+<IfModule mod_headers.c>
+    # matching requested *.pdf files only (strict rules block Safari showing PDF documents)
+    <FilesMatch "\.pdf$">
+        Header set Content-Security-Policy "default-src 'self' 'unsafe-inline'; script-src 'none'; object-src 'self'; plugin-types application/pdf;"
+    </FilesMatch>
+    # matching requested *.svg files only (allows using inline styles when serving SVG files)
+    <FilesMatch "\.svg">
+        Header set Content-Security-Policy "default-src 'self'; script-src 'none'; style-src 'unsafe-inline'; object-src 'none';"
+    </FilesMatch>
+    # matching anything else, using negative lookbehind pattern
+    <FilesMatch "(?<!\.(?:pdf|svg))$">
+        Header set Content-Security-Policy "default-src 'self'; script-src 'none'; style-src 'none'; object-src 'none';"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+
+	# Enable URL rewriting
+	RewriteEngine On
+
+	# Store the current location in an environment variable CWD to use
+	# mod_rewrite in .htaccess files without knowing the RewriteBase
+	RewriteCond $0#%{REQUEST_URI} ([^#]*)#(.*)\1$
+	RewriteRule ^.*$ - [E=CWD:%2]
+
+	# If the file/symlink/directory does not exist, route the request to index.php (single entry point)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-l
+	RewriteRule ^.*$ %{ENV:CWD}index.php [QSA,L]
+
+</IfModule>
