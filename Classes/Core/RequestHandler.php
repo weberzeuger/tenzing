@@ -24,6 +24,7 @@ class RequestHandler
 
     /**
      * Process the request and return the response
+     * TEST
      */
     public function handle(Request $request): Response
     {
