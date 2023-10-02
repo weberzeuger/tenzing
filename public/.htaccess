@@ -26,6 +26,11 @@
 	RewriteCond $0#%{REQUEST_URI} ([^#]*)#(.*)\1$
 	RewriteRule ^.*$ - [E=CWD:%2]
 
+    # Redirect non-trailing slash to trailing slash
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f 
+    RewriteRule ^.*[^/]$ /$0/ [L,R=301]
+    
 	# If the file/symlink/directory does not exist, route the request to index.php (single entry point)
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
